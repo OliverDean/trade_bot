@@ -41,7 +41,7 @@ void *nasdaq_data_ingestion_thread(void *args) {
         }
 
         memcpy(pool_data, market_data, sizeof(MarketData));
-        enqueue(ingestion_args->queue, pool_data);
+        lock_free_queue_enqueue(ingestion_args->queue, pool_data);
         free(market_data);
     }
 

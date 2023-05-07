@@ -1,0 +1,15 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -O2
+DEPS = algorithm_execution.h arbitrage_trading_strategy.h pre_processing.h lock_free_queue.h market_data_pool.h risk_managment.h
+OBJ = algorithm_execution.o arbitrage_trading_strategy.o data_ingestion.o lock_free_queue.o market_data_pool.o pre_processing.o risk_managment.o trading_algorithms.o
+
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+trading_algorithms: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+.PHONY: clean
+
+clean:
+	rm -f *.o trading_algorithms
