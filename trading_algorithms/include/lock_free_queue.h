@@ -2,7 +2,8 @@
 #define LOCK_FREE_QUEUE_H
 
 #include <stdbool.h>
-#include "market_data.h"
+
+typedef struct MarketData MarketData; // Forward declaration of MarketData
 
 typedef struct LockFreeQueueNode {
     MarketData *data;

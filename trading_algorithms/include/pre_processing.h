@@ -32,7 +32,7 @@ typedef struct {
 typedef struct {
     double *price_differences;
     size_t price_difference_count;
-    double *transaction_costs;
+    double transaction_costs;
     double latency;
     double *rolling_volatilities;
     size_t rolling_volatility_count;
@@ -41,6 +41,9 @@ typedef struct {
     TrendInfo trend_info;
     // Add any additional fields required for other strategies and pre-processing steps
 } PreProcessedData;
+
+
+size_t calculate_adaptive_interval(double volume, double roc);
 
 
 PreProcessedData *pre_process_data(const RawData *raw_data, size_t rolling_volatility_window_size, size_t custom_window_size);
@@ -61,6 +64,13 @@ double calculate_resistance_level(const double *prices, size_t price_count);
 double *calculate_rolling_volatilities(const double *price_differences, size_t price_difference_count, size_t window_size);
 void update_price_differences(PreProcessedData *data, const RawData *new_data);
 void update_rolling_volatilities(PreProcessedData *data, const RawData *new_data, size_t rolling_volatility_count);
+
+double calculate_moving_average(const double *prices, size_t num_prices);
+double calculate_exponential_moving_average(const double *prices, size_t num_prices);
+void calculate_bollinger_bands(const double *prices, size_t num_prices, double *upper_band, double *lower_band);
+double calculate_relative_strength_index(const double *prices, size_t num_prices);
+double calculate_rate_of_change(const double *prices, size_t num_prices);
+
 
 
 #endif // PRE_PROCESSING_H

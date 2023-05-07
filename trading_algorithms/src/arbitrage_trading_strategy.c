@@ -74,7 +74,7 @@ TradeSignal arbitrage_trading_strategy(const PreProcessedData *data)
     double dynamic_threshold = calculate_dynamic_threshold(data, base_threshold);
     double current_price_difference = data->price_differences[data->price_difference_count - 1];
     double liquidity = get_current_liquidity(data);
-    bool trade_is_profitable = is_trade_profitable(current_price_difference, *data->transaction_costs, data->latency, &data->liquidity_info, liquidity);
+    bool trade_is_profitable = is_trade_profitable(current_price_difference, data->transaction_costs, data->latency, &data->liquidity_info, liquidity);
 
     if (trade_is_profitable && current_price_difference > dynamic_threshold && trend_strength(data) > 0)
     {

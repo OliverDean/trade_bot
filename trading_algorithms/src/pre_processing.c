@@ -10,6 +10,9 @@
 #include <math.h>
 #include "market_data.h"
 
+#define DEFAULT_CALCULATION_INTERVAL 1000
+#define MAX_RECORDS_TO_PROCESS 10000
+
 
 PreProcessedData *pre_process_data(const RawData *raw_data, size_t rolling_volatility_window_size, size_t custom_window_size) {
     PreProcessedData *data = (PreProcessedData *)malloc(sizeof(PreProcessedData));
