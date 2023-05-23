@@ -6,6 +6,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
+#include <string.h>
 
 typedef struct {
     double *prices;
@@ -40,7 +42,24 @@ typedef struct {
     LiquidityInfo liquidity_info;
     TrendInfo trend_info;
     // Add any additional fields required for other strategies and pre-processing steps
+    double lower_price_level;
+    double upper_price_level;
+    double support_level;
+    double resistance_level;
 } PreProcessedData;
+
+typedef struct PreProcessingArgs
+{
+    LockFreeQueue *input_queue;
+    LockFreeQueue *output_queue;
+} PreProcessingArgs;
+
+typedef struct PriceLevels
+{
+    double upper;
+    double lower;
+    double pivot_point;
+} PriceLevels;
 
 
 size_t calculate_adaptive_interval(double volume, double roc);
@@ -65,12 +84,10 @@ double *calculate_rolling_volatilities(const double *price_differences, size_t p
 void update_price_differences(PreProcessedData *data, const RawData *new_data);
 void update_rolling_volatilities(PreProcessedData *data, const RawData *new_data, size_t rolling_volatility_count);
 
-double calculate_moving_average(const double *prices, size_t num_prices);
-double calculate_exponential_moving_average(const double *prices, size_t num_prices);
-void calculate_bollinger_bands(const double *prices, size_t num_prices, double *upper_band, double *lower_band);
-double calculate_relative_strength_index(const double *prices, size_t num_prices);
-double calculate_rate_of_change(const double *prices, size_t num_prices);
-
-
+void calculate_moving_average(MarketData *data, double *window, size_t window_size);
+void calculate_exponential_moving_average(MarketData *data, double *prev_ema);
+void calculate_bollinger_bands(MarketData *data, double *window, size_t window_size);
+void calculate_relative_strength_index(MarketData *data, double *price_changes, size_t period, size_t *index);
+void calculate_rate_of_change(MarketData *data, double *window, size_t window_size);
 
 #endif // PRE_PROCESSING_H
