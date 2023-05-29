@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-typedef struct MarketData MarketData; // Forward declaration of MarketData
+//typedef struct MarketData MarketData; // Forward declaration of MarketData
 
 typedef struct LockFreeQueueNode {
     MarketData *data;

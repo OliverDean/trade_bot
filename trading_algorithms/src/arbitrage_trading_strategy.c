@@ -8,6 +8,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "arbitrage_trading_strategy.h"
+#include "market_data.h"
+#include "market_data_pool.h"
+#include "lock_free_queue.h"
+
+
 
 typedef enum
 {
@@ -46,6 +51,12 @@ double calculate_standard_deviation(const double *values, size_t count, size_t w
 // algorithm_execution.c
 
 #include "algorithm_execution.h"
+#include "arbitrage_trading_strategy.h"
+#include "market_data.h"
+#include "market_data_pool.h"
+#include "lock_free_queue.h"
+
+
 
 bool is_trade_profitable(double price_difference, double transaction_costs, double latency, const LiquidityInfo *liquidity_info, double liquidity)
 {

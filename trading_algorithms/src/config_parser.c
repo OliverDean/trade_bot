@@ -1,7 +1,7 @@
-#include <libconfig.h>
+#include "config_parser.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "config_parser.h"
+#include <libconfig.h>
 
 int load_config(const char *config_file_path, ConfigParams *params)
 {
