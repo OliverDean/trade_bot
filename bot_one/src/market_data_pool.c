@@ -23,9 +23,9 @@ MarketData *market_data_pool_alloc(MarketDataPool *pool) {
     }
 }
 
-void market_data_pool_free(MarketDataPool *pool, MarketData *data) {
-    // Implement if necessary
-}
+// void market_data_pool_free(MarketDataPool *pool, MarketData *data) {
+//     // Implement if necessary
+// }
 
 void market_data_pool_destroy(MarketDataPool *pool) {
     pthread_mutex_destroy(&pool->mutex);

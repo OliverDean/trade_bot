@@ -2,7 +2,8 @@
 #define RISK_MANAGEMENT_H
 
 #include "pre_processing.h"
-#include "algorithm_execution.h"
+#include "types.h"
+#include <stdbool.h>
 
 typedef struct {
     double (*calculate_dynamic_stop_loss)(const PreProcessedData *, TradeSignal);

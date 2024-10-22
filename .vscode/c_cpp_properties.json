@@ -5,7 +5,12 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/c_files",
-                "C:/msys64/mingw64/include/lzma"
+                "${workspaceFolder}/include",
+                "C:/msys64/mingw64/include/lzma",
+                "/usr/include/cjson",
+                "/usr/include",
+                "/usr/include/x86_64-linux-gnu",
+                "/usr/local/include"  
             ],
             "defines": [
                 "_DEBUG",

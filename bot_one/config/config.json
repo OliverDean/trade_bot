@@ -1,0 +1,8 @@
+{
+    "api_key": "your_api_key_here",
+    "api_secret": "your_api_secret_here",
+    "symbol": "BTCUSDT",
+    "interval": "1m",
+    "start_date": "1 Jan 2021",
+    "end_date": "today"
+}

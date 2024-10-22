@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include "market_data.h"
+#include <pthread.h>
 
 typedef struct {
     MarketData *buffer;

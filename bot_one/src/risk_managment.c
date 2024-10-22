@@ -1,8 +1,10 @@
 #include "risk_management.h"
+#include "pre_processing.h"
+#include "types.h"
 
 // Placeholder functions for price retrieval
 static double get_current_price(const PreProcessedData *data);
-static double get_entry_price(const PreProcessedData *data);
+static double get_entry_price(const TradeSignal *trade_signal);
 
 // Helper function prototypes
 static bool should_stop_loss(const PreProcessedData *data, double current_price, double entry_price, TradeSignal trade_signal, const RiskManagementSettings *settings);
@@ -10,7 +12,7 @@ static bool is_position_within_limit(const PreProcessedData *data, double positi
 
 void integrate_risk_management(const PreProcessedData *data, TradeSignal *trade_signal, const RiskManagementSettings *settings) {
     double current_price = get_current_price(data);
-    double entry_price = get_entry_price(data);
+    double entry_price = get_entry_price(trade_signal);
 
     if (should_stop_loss(data, current_price, entry_price, *trade_signal, settings)) {
         trade_signal->action = HOLD;
@@ -31,10 +33,10 @@ static double get_current_price(const PreProcessedData *data) {
     return 0;
 }
 
-static double get_entry_price(const PreProcessedData *data) {
-    // Placeholder: Retrieve the entry price from the trading context
-    // This could be stored in the TradeSignal or maintained elsewhere
-    return 0; // Replace with actual implementation
+// Implement get_entry_price
+static double get_entry_price(const TradeSignal *trade_signal) {
+    // Assuming the entry price is stored in the trade signal
+    return trade_signal->entry_price;  // Use trade_signal, not data
 }
 
 // Helper function implementations

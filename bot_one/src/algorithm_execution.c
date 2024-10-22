@@ -1,5 +1,10 @@
 #include "algorithm_execution.h"
+#include "risk_management.h"
+#include "types.h"
+#include <stdbool.h>
 #include <math.h>
+#include "pre_processing.h"
+
 
 // Helper function prototypes
 static double calculate_dynamic_threshold(const PreProcessedData *data, double base_threshold);
@@ -9,8 +14,7 @@ static double trend_strength(const PreProcessedData *data);
 static bool is_trade_profitable(double price_difference, double transaction_costs, double latency, const LiquidityInfo *liquidity_info, double liquidity);
 static double get_current_liquidity(const PreProcessedData *data);
 
-TradeSignal execute_algorithm(const PreProcessedData *data, TradingAlgorithm algorithm, const RiskManagementSettings *settings) {
-    // Execute the specific trading algorithm to generate a trade signal
+TradeSignal execute_algorithm(const PreProcessedData *data, TradingAlgorithm algorithm, const RiskManagementSettings *settings) {    // Execute the specific trading algorithm to generate a trade signal
     TradeSignal trade_signal = algorithm(data);
 
     // Integrate risk management with the trade signal
@@ -34,15 +38,15 @@ TradeSignal arbitrage_trading_strategy(const PreProcessedData *data) {
 
     if (trade_is_profitable && current_price_difference > dynamic_threshold && trend_strength(data) > 0) {
         double position_size = calculate_position_size(current_price_difference, &data->risk_management_params);
-        TradeSignal signal = {BUY, position_size};
+        TradeSignal signal = {.action = BUY, .position_size = position_size, .entry_price = data->prices[data->price_count - 1]};
         return signal;
     } else if (trade_is_profitable && current_price_difference < -dynamic_threshold && trend_strength(data) < 0) {
         double position_size = calculate_position_size(-current_price_difference, &data->risk_management_params);
-        TradeSignal signal = {SELL, position_size};
+        TradeSignal signal = {.action = SELL, .position_size = position_size, .entry_price = data->prices[data->price_count - 1]};
         return signal;
     }
 
-    TradeSignal signal = {HOLD, 0};
+    TradeSignal signal = {.action = HOLD, .position_size = 0.0, .entry_price = 0.0};
     return signal;
 }
 
@@ -88,18 +92,60 @@ static double calculate_position_size(double price_difference, const RiskManagem
 }
 
 static double trend_strength(const PreProcessedData *data) {
-    // Placeholder implementation; replace with actual trend calculation
-    return data->trend_info.trend_strength;
+    /**
+     * @brief Calculates the strength of the current market trend.
+     *
+     * @param data Pointer to pre-processed data.
+     * @return A double representing the trend strength (-1 to 1).
+     */
+    size_t n = data->price_count;
+    if (n < data->trend_period) return 0.0;
+
+    // Calculate linear regression slope over the trend period
+    double sum_x = 0.0, sum_y = 0.0, sum_xy = 0.0, sum_xx = 0.0;
+    size_t start = n - data->trend_period;
+
+    for (size_t i = 0; i < data->trend_period; i++) {
+        double x = i;
+        double y = data->prices[start + i];
+        sum_x += x;
+        sum_y += y;
+        sum_xy += x * y;
+        sum_xx += x * x;
+    }
+
+    double slope = (data->trend_period * sum_xy - sum_x * sum_y) / (data->trend_period * sum_xx - sum_x * sum_x);
+
+    // Normalize the slope to a value between -1 and 1
+    double max_slope = (data->prices[n - 1] - data->prices[start]) / data->trend_period;
+    if (max_slope == 0) return 0.0;
+    double trend_strength = slope / max_slope;
+
+    return trend_strength;
 }
 
+
 static bool is_trade_profitable(double price_difference, double transaction_costs, double latency, const LiquidityInfo *liquidity_info, double liquidity) {
-    return (price_difference - transaction_costs - latency > 0) && (liquidity >= liquidity_info->minimum_liquidity);
+    // Calculate net expected profit
+    double net_profit = price_difference - transaction_costs - latency * liquidity_info->slippage_factor;
+
+    // Check liquidity constraints
+    bool sufficient_liquidity = liquidity >= liquidity_info->minimum_liquidity;
+
+    return (net_profit > 0) && sufficient_liquidity;
 }
 
 static double get_current_liquidity(const PreProcessedData *data) {
-    // Placeholder implementation; replace with actual liquidity retrieval
+
     if (data->liquidity_count > 0) {
-        return data->liquidity[data->liquidity_count - 1];
+        // Use an average over the last few data points for stability
+        size_t window_size = 5;
+        size_t count = data->liquidity_count < window_size ? data->liquidity_count : window_size;
+        double sum = 0.0;
+        for (size_t i = data->liquidity_count - count; i < data->liquidity_count; i++) {
+            sum += data->liquidity[i];
+        }
+        return sum / count;
     }
-    return 0;
+    return 0.0;
 }

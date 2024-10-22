@@ -4,7 +4,6 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "lock_free_queue.h"
 
 typedef struct MarketData {
     char symbol[10];
@@ -21,9 +20,5 @@ typedef struct MarketData {
     double upper_price_level;
     double lower_price_level;
 } MarketData;
-
-MarketData *dequeue(LockFreeQueue *queue);
-void enqueue(LockFreeQueue *queue, MarketData *data);
-MarketData *fetch_market_data();
 
 #endif // MARKET_DATA_H

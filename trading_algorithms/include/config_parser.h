@@ -1,7 +1,6 @@
 #ifndef CONFIG_PARSER_H
 #define CONFIG_PARSER_H
 
-// Define constants
 typedef struct {
     int default_calculation_interval;
     int max_records_to_process;
@@ -11,7 +10,6 @@ typedef struct {
     double bollinger_multiplier;
 } ConfigParams;
 
-// Function to load config
 int load_config(const char *config_file_path, ConfigParams *params);
 
-#endif
+#endif // CONFIG_PARSER_H

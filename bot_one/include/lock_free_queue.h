@@ -4,14 +4,15 @@
 #include <stdatomic.h>
 #include <stdbool.h>
 
+
 typedef struct LockFreeQueueNode {
     void *data;
     struct LockFreeQueueNode *next;
 } LockFreeQueueNode;
 
 typedef struct {
-    _Atomic(LockFreeQueueNode *) head;
-    _Atomic(LockFreeQueueNode *) tail;
+    _Atomic(struct LockFreeQueueNode *) head;
+    _Atomic(struct LockFreeQueueNode *) tail;
 } LockFreeQueue;
 
 LockFreeQueue *lock_free_queue_init();
